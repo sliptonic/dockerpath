@@ -6,7 +6,15 @@ MAINTAINER Phillip Bailey <phillip@bailey.st>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
-RUN apt-get -y install nginx  sed python-pip python-dev uwsgi-plugin-python supervisor
+RUN apt-get -y install nginx  sed python-pip python-dev uwsgi-plugin-python supervisor build-essential cmake libboost-all-dev git
+
+#COPY opencamlib /opencamlib
+RUN git clone https://github.com/aewallin/opencamlib.git opencamlib
+RUN mkdir opencamlib/build
+RUN cd opencamlib/build && cmake /opencamlib/src && make && make install
+
+RUN git clone https://github.com/danielfalck/libactp.git actp
+RUN cd actp/PythonLib && make && make install
 
 RUN mkdir -p /var/log/nginx/app
 RUN mkdir -p /var/log/uwsgi/app/
